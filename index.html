@@ -816,12 +816,20 @@
         }
 
         .author-image-wrap .author-initials {
-            font-family: 'Playfair Display', serif;
-            font-size: 4rem;
-            font-weight: 900;
-            color: rgba(255,255,255,0.15);
-        }
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+}
 
+.author-image-wrap .author-initials img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
         .author-image-wrap::after {
             content: 'Pablo Neruda (1904–1973)';
             position: absolute;
@@ -1045,7 +1053,7 @@
 
             <div class="author-bio fade-in">
                 <div class="author-image-wrap">
-                    <span class="author-initials">PN</span>
+                    <span class="author-initials"><img src="img/pablo.jpg" alt="Pablo Neruda"></span>
                 </div>
                 <div class="author-details">
                     <h3>Pablo Neruda</h3>
