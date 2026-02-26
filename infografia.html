@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oda al Aire – Pablo Neruda | Infografía Interactiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sky-deep: #0a1628;
+            --sky-mid: #1a3a5c;
+            --sky-light: #4a8bb5;
+            --sky-pale: #89c4e8;
+            --sky-whisper: #c8e6f5;
+            --cloud-white: #f0f7fc;
+            --gold-warm: #d4a847;
+            --gold-light: #f0d68a;
+            --earth-green: #3a7d5c;
+            --earth-sage: #7fb597;
+            --rose-dust: #c9828e;
+            --text-dark: #1a2a3a;
+            --text-body: #2d3e50;
+            --text-light: #6b8299;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            color: var(--text-body);
+            background: var(--sky-deep);
+            overflow-x: hidden;
+        }
+
+        /* ========== PARTICLES CANVAS ========== */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ========== NAVIGATION ========== */
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.5s ease;
+            background: transparent;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(10, 22, 40, 0.92);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+            padding: 0.6rem 2rem;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.8);
+            padding: 0.5rem 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(212, 168, 71, 0.25);
+            border-color: var(--gold-warm);
+            color: var(--gold-light);
+            transform: translateY(-1px);
+        }
+
+        /* ========== HERO / PORTADA ========== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(170deg, #0a1628 0%, #1a3a5c 40%, #4a8bb5 75%, #89c4e8 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(212,168,71,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(137,196,232,0.1) 0%, transparent 40%);
+            animation: heroGlow 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-3%, -2%) rotate(3deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+        }
+
+        .hero-label {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold-warm);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.3s forwards;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.6s forwards;
+            text-shadow: 0 4px 40px rgba(0,0,0,0.3);
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--sky-pale);
+        }
+
+        .hero-author {
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.7);
+            font-style: italic;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.9s forwards;
+        }
+
+        .hero-divider {
+            width: 80px;
+            height: 2px;
+            background: var(--gold-warm);
+            margin: 0 auto 2rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+        }
+
+        .hero-team {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 1.2s forwards;
+        }
+
+        .team-member {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 0.6rem 1.3rem;
+            border-radius: 50px;
+            color: rgba(255,255,255,0.85);
+            font-size: 0.9rem;
+            font-weight: 400;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            background: rgba(212,168,71,0.15);
+            border-color: var(--gold-warm);
+            transform: translateY(-2px);
+        }
+
+        .team-member .number {
+            color: var(--gold-warm);
+            font-weight: 700;
+            margin-left: 0.4rem;
+            font-size: 0.8rem;
+        }
+
+        .hero-cta {
+            opacity: 0;
+            animation: fadeUp 1s ease 1.5s forwards;
+        }
+
+        .btn-explore {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            background: linear-gradient(135deg, var(--gold-warm), #c49630);
+            color: var(--sky-deep);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 30px rgba(212,168,71,0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-explore:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(212,168,71,0.5);
+        }
+
+        .btn-explore .arrow {
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-explore:hover .arrow {
+            transform: translateY(3px);
+        }
+
+        /* Wind lines decoration */
+        .wind-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .wind-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            animation: windFlow linear infinite;
+        }
+
+        @keyframes windFlow {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw); opacity: 0; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== SECTIONS ========== */
+        .section {
+            position: relative;
+            z-index: 10;
+            padding: 6rem 2rem;
+        }
+
+        .section-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-warm);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .title-underline {
+            width: 60px;
+            height: 3px;
+            background: var(--gold-warm);
+            margin: 1.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        /* SECTION BACKGROUNDS */
+        .section--contexto {
+            background: linear-gradient(180deg, var(--cloud-white) 0%, #e8f2fa 100%);
+            color: var(--text-dark);
+        }
+
+        .section--problema {
+            background: linear-gradient(180deg, #1a2a3a 0%, #0f1f2e 100%);
+            color: white;
+        }
+
+        .section--problema .section-subtitle { color: rgba(255,255,255,0.6); }
+
+        .section--analisis {
+            background: linear-gradient(180deg, #f8f4ee 0%, #f0ece4 100%);
+            color: var(--text-dark);
+        }
+
+        .section--interpretacion {
+            background: linear-gradient(180deg, #0a1628 0%, #152a42 50%, #1a3a5c 100%);
+            color: white;
+        }
+
+        .section--interpretacion .section-subtitle { color: rgba(255,255,255,0.6); }
+
+        .section--poema {
+            background: linear-gradient(180deg, #f0ece4 0%, var(--cloud-white) 100%);
+            color: var(--text-dark);
+        }
+
+        /* ========== CARDS & INTERACTIVE ELEMENTS ========== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .info-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--sky-light), var(--gold-warm));
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, var(--sky-pale), var(--sky-light));
+            color: white;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            line-height: 1.75;
+            color: var(--text-body);
+        }
+
+        /* Dark cards for dark sections */
+        .dark-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .dark-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(212,168,71,0.3);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .dark-card::before {
+            background: linear-gradient(90deg, var(--gold-warm), var(--rose-dust));
+        }
+
+        .dark-card .card-title { color: white; }
+        .dark-card .card-text { color: rgba(255,255,255,0.75); }
+        .dark-card .card-icon {
+            background: linear-gradient(135deg, rgba(212,168,71,0.3), rgba(212,168,71,0.1));
+        }
+
+        /* ========== ACCORDION ========== */
+        .accordion {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .accordion-item {
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .accordion-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section--analisis .accordion-item {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .section--interpretacion .accordion-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .accordion-header {
+            padding: 1.3rem 1.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .section--analisis .accordion-header:hover {
+            background: rgba(74,139,181,0.05);
+        }
+
+        .section--interpretacion .accordion-header:hover {
+            background: rgba(255,255,255,0.03);
+        }
+
+        .accordion-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .accordion-icon-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .section--analisis .accordion-icon-circle {
+            background: linear-gradient(135deg, var(--sky-pale), var(--sky-light));
+            color: white;
+        }
+
+        .section--interpretacion .accordion-icon-circle {
+            background: rgba(212,168,71,0.2);
+        }
+
+        .accordion-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .section--analisis .accordion-label { color: var(--text-dark); }
+        .section--interpretacion .accordion-label { color: white; }
+
+        .accordion-chevron {
+            font-size: 1.2rem;
+            transition: transform 0.4s ease;
+            flex-shrink: 0;
+        }
+
+        .section--analisis .accordion-chevron { color: var(--sky-light); }
+        .section--interpretacion .accordion-chevron { color: var(--gold-warm); }
+
+        .accordion-item.open .accordion-chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+
+        .accordion-item.open .accordion-body {
+            max-height: 800px;
+        }
+
+        .accordion-content {
+            padding: 0 1.8rem 1.5rem 4.8rem;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .section--analisis .accordion-content { color: var(--text-body); }
+        .section--interpretacion .accordion-content { color: rgba(255,255,255,0.75); }
+
+        /* ========== QUOTE BLOCKS ========== */
+        .quote-block {
+            position: relative;
+            background: linear-gradient(135deg, rgba(212,168,71,0.08), rgba(74,139,181,0.06));
+            border-left: 4px solid var(--gold-warm);
+            border-radius: 0 12px 12px 0;
+            padding: 1.5rem 2rem;
+            margin: 1.2rem 0;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        .dark-quote {
+            background: rgba(212,168,71,0.06);
+            border-left-color: var(--gold-warm);
+            color: rgba(255,255,255,0.85);
+        }
+
+        .quote-block::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--gold-warm);
+            opacity: 0.4;
+        }
+
+        /* ========== RESOURCE TAGS ========== */
+        .resource-example {
+            margin: 1rem 0;
+            padding: 1rem 1.3rem;
+            background: rgba(74,139,181,0.06);
+            border-radius: 10px;
+            border: 1px solid rgba(74,139,181,0.1);
+        }
+
+        .resource-label {
+            font-weight: 700;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--sky-light);
+            margin-bottom: 0.4rem;
+        }
+
+        .resource-text {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text-body);
+        }
+
+        /* ========== POEM SECTION ========== */
+        .poem-container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .poem-text {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            line-height: 2;
+            color: var(--text-body);
+            column-count: 1;
+            position: relative;
+        }
+
+        .poem-text .stanza {
+            margin-bottom: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .poem-text .stanza:hover {
+            background: rgba(74,139,181,0.06);
+        }
+
+        .poem-text .highlight-verse {
+            color: var(--sky-mid);
+            font-weight: 600;
+            border-bottom: 2px solid var(--gold-warm);
+            padding-bottom: 1px;
+            cursor: help;
+            transition: all 0.3s ease;
+        }
+
+        .poem-text .highlight-verse:hover {
+            color: var(--gold-warm);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: var(--sky-deep);
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-style: normal;
+            font-size: 0.85rem;
+            max-width: 280px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            line-height: 1.5;
+        }
+
+        .tooltip.show { opacity: 1; }
+
+        /* ========== IMPACT COUNTER ========== */
+        .impact-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .impact-item {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            transition: all 0.4s ease;
+        }
+
+        .impact-item:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-3px);
+        }
+
+        .impact-number {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 900;
+            color: var(--gold-warm);
+            display: block;
+        }
+
+        .impact-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ========== INTERACTIVE TIMELINE ========== */
+        .timeline {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 24px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--gold-warm), var(--sky-light), var(--gold-warm));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 65px;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 15px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            background: var(--gold-warm);
+            border-radius: 50%;
+            border: 3px solid var(--cloud-white);
+            box-shadow: 0 0 0 3px var(--gold-warm);
+            z-index: 2;
+        }
+
+        .timeline-content {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .timeline-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .timeline-text {
+            font-size: 0.92rem;
+            line-height: 1.7;
+            color: var(--text-body);
+        }
+
+        /* ========== AUTHOR BIO ========== */
+        .author-bio {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 3rem;
+            align-items: start;
+            margin-bottom: 3rem;
+        }
+
+        .author-image-wrap {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, var(--sky-mid), var(--sky-deep));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .author-image-wrap .author-initials {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(255,255,255,0.15);
+        }
+
+        .author-image-wrap::after {
+            content: 'Pablo Neruda (1904–1973)';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 2rem 1.2rem 1rem;
+            background: linear-gradient(transparent, rgba(10,22,40,0.9));
+            color: white;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .author-details h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            margin-bottom: 1.2rem;
+        }
+
+        .author-details p {
+            font-size: 0.98rem;
+            line-height: 1.85;
+            color: var(--text-body);
+            margin-bottom: 1rem;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, rgba(74,139,181,0.1), rgba(74,139,181,0.05));
+            color: var(--sky-mid);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(74,139,181,0.15);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--sky-deep);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ========== SCROLL ANIMATIONS ========== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-delay-1 { transition-delay: 0.1s; }
+        .fade-in-delay-2 { transition-delay: 0.2s; }
+        .fade-in-delay-3 { transition-delay: 0.3s; }
+        .fade-in-delay-4 { transition-delay: 0.4s; }
+
+        /* ========== PROGRESS BAR ========== */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-warm), var(--sky-light));
+            z-index: 200;
+            transition: width 0.1s linear;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .author-bio {
+                grid-template-columns: 1fr;
+            }
+
+            .author-image-wrap {
+                max-width: 250px;
+                margin: 0 auto;
+            }
+
+            .impact-strip {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .nav-bar {
+                flex-wrap: wrap;
+                gap: 0.3rem;
+                padding: 0.5rem 0.8rem;
+            }
+
+            .nav-btn {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.7rem;
+            }
+
+            .section {
+                padding: 4rem 1.2rem;
+            }
+
+            .hero-team {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .accordion-content {
+                padding-left: 1.8rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========== SCROLL TO TOP ========== */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gold-warm);
+            color: var(--sky-deep);
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(212,168,71,0.4);
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .scroll-top-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(212,168,71,0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Particles -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="nav-bar" id="navBar">
+        <button class="nav-btn active" onclick="scrollToSection('hero')">Portada</button>
+        <button class="nav-btn" onclick="scrollToSection('contexto')">Contexto</button>
+        <button class="nav-btn" onclick="scrollToSection('problema')">Problemática</button>
+        <button class="nav-btn" onclick="scrollToSection('analisis')">Análisis</button>
+        <button class="nav-btn" onclick="scrollToSection('poema')">Poema</button>
+        <button class="nav-btn" onclick="scrollToSection('interpretacion')">Reflexión</button>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="hero">
+        <div class="wind-lines" id="windLines"></div>
+        <div class="hero-content">
+            <div class="hero-label">Infografía Interactiva · Poesía y Ecología</div>
+            <h1 class="hero-title">Oda al <em>Aire</em></h1>
+            <p class="hero-author">Pablo Neruda</p>
+            <div class="hero-divider"></div>
+            <div class="hero-team">
+                <div class="team-member">Sebastian S. Frias <span class="number">#11</span></div>
+                <div class="team-member">Lewin F. Martínez <span class="number">#15</span></div>
+                <div class="team-member">Joel A. Morales <span class="number">#19</span></div>
+            </div>
+            <div class="hero-cta">
+                <a href="#contexto" class="btn-explore">
+                    Explorar Infografía <span class="arrow">↓</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTEXTO ==================== -->
+    <section class="section section--contexto" id="contexto">
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-number">01 — Contexto</span>
+                <h2 class="section-title" style="color: var(--text-dark);">El Poeta y su Tiempo</h2>
+                <p class="section-subtitle" style="color: var(--text-light);">Un vistazo al autor, su mundo y la situación que lo inspiró a escribir esta oda</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="author-bio fade-in">
+                <div class="author-image-wrap">
+                    <span class="author-initials">PN</span>
+                </div>
+                <div class="author-details">
+                    <h3>Pablo Neruda</h3>
+                    <p>Ricardo Eliécer Neftalí Reyes Basoalto, conocido mundialmente como <strong>Pablo Neruda</strong> (1904–1973), fue un poeta chileno y una de las voces más influyentes de la literatura latinoamericana del siglo XX. Ganador del <strong>Premio Nobel de Literatura en 1971</strong>, su obra abarca desde el romanticismo intenso hasta la poesía social comprometida.</p>
+                    <p>Las <em>Odas Elementales</em> (1954), donde se incluye «Oda al aire», representan un giro hacia lo cotidiano y lo esencial: celebrar los elementos básicos de la vida como el aire, el agua y la tierra, dotándolos de significado político y humano.</p>
+                    <div class="tag-list">
+                        <span class="tag">Premio Nobel 1971</span>
+                        <span class="tag">Poeta Social</span>
+                        <span class="tag">Chile</span>
+                        <span class="tag">Odas Elementales</span>
+                        <span class="tag">Siglo XX</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🌍 Situación Social</div>
+                        <div class="timeline-text">En la década de 1950, América Latina enfrentaba profundas desigualdades: las élites controlaban los recursos naturales mientras las clases populares carecían de lo básico. Neruda, comprometido con la causa social, usó su poesía como herramienta de denuncia.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">🏭 Contexto Ambiental</div>
+                        <div class="timeline-text">La industrialización acelerada de mediados del siglo XX comenzaba a mostrar sus efectos devastadores sobre el medio ambiente. La contaminación del aire y el agua se convertía en una realidad cotidiana para las comunidades más vulnerables.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">⚡ Problema Central</div>
+                        <div class="timeline-text">El poema aborda la <strong>privatización y mercantilización de los recursos naturales</strong>: el agua, la luz y potencialmente el aire. Neruda advierte sobre un futuro donde incluso lo más esencial se convierta en mercancía para los poderosos.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PROBLEMÁTICA ==================== -->
+    <section class="section section--problema" id="problema">
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-number">02 — Problemática</span>
+                <h2 class="section-title" style="color: white;">La Denuncia Ambiental</h2>
+                <p class="section-subtitle">¿Qué sucede cuando los recursos vitales se convierten en mercancía?</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="impact-strip fade-in">
+                <div class="impact-item">
+                    <span class="impact-number" data-target="2200">0</span>
+                    <div class="impact-label">Millones sin agua potable</div>
+                </div>
+                <div class="impact-item">
+                    <span class="impact-number" data-target="7">0</span>
+                    <div class="impact-label">Mill. de muertes anuales por contaminación del aire</div>
+                </div>
+                <div class="impact-item">
+                    <span class="impact-number" data-target="99">0</span>
+                    <div class="impact-label">% de la población respira aire contaminado</div>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="info-card dark-card">
+                    <div class="card-icon">🌬️</div>
+                    <div class="card-title">¿Qué problema denuncia?</div>
+                    <div class="card-text">Neruda denuncia la <strong style="color:var(--gold-light)">mercantilización de los recursos naturales</strong>: el agua ya se vendió, la luz se racionó, y el poeta teme que el aire — lo último que queda libre — también sea privatizado. Es una crítica a un sistema que convierte lo esencial para la vida en producto de consumo exclusivo.</div>
+                </div>
+                <div class="info-card dark-card">
+                    <div class="card-icon">👥</div>
+                    <div class="card-title">¿A quién afecta?</div>
+                    <div class="card-text">Afecta directamente a los <strong style="color:var(--gold-light)">más pobres y vulnerables</strong>: los que «caminan con su sed tambaleando en la arena», los que viven «en la terrible sombra del callejón», los que «pican piedra, clavan tablas, cosen ropa, cortan leña, muelen tierra» — la clase trabajadora desposeída.</div>
+                </div>
+                <div class="info-card dark-card">
+                    <div class="card-icon">⚠️</div>
+                    <div class="card-title">¿Cuáles son las consecuencias?</div>
+                    <div class="card-text">Sed, oscuridad, crimen, violencia y desigualdad extrema. Neruda muestra un mundo donde <strong style="color:var(--gold-light)">«Todo es aurora en los nuevos jardines suspendidos»</strong> para los ricos, mientras <strong style="color:var(--gold-light)">«todo es oscuridad»</strong> para los pobres. La privatización genera una sociedad fragmentada donde la vida misma se vuelve un privilegio.</div>
+                </div>
+            </div>
+
+            <div class="quote-block dark-quote fade-in" style="margin-top: 2.5rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                El agua se vendió / y de las cañerías / en el desierto / he visto / terminarse las gotas / y el mundo pobre, el pueblo / caminar con su sed / tambaleando en la arena.
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ANÁLISIS LITERARIO ==================== -->
+    <section class="section section--analisis" id="analisis">
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-number">03 — Análisis Literario</span>
+                <h2 class="section-title" style="color: var(--text-dark);">Descifrando el Poema</h2>
+                <p class="section-subtitle" style="color: var(--text-light);">Tema central, mensaje, figuras literarias y fragmentos destacados</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="accordion">
+                <!-- Tema Central -->
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-header-left">
+                            <div class="accordion-icon-circle">🎯</div>
+                            <span class="accordion-label">Tema Central</span>
+                        </div>
+                        <span class="accordion-chevron">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <p>El tema central del poema es la <strong>defensa de los recursos naturales como bienes comunes de la humanidad</strong>, especialmente del aire, último elemento que permanece libre y accesible para todos. Neruda personifica al aire para establecer un diálogo urgente sobre la justicia social y ambiental, advirtiendo que la mercantilización de la naturaleza condena a los más pobres.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje -->
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-header-left">
+                            <div class="accordion-icon-circle">💬</div>
+                            <span class="accordion-label">Mensaje del Poema</span>
+                        </div>
+                        <span class="accordion-chevron">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <p>Neruda transmite un mensaje de <strong>resistencia y esperanza</strong>: los elementos naturales no deben ser mercancía. El aire representa la libertad y la vida misma — lo único que les queda a los desposeídos. El poeta se declara aliado del pueblo y del aire, llamando a preservar lo que es de todos y soñando con un futuro donde «la luz y el agua, la tierra, el hombre, y todo para todos será».</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recursos Literarios -->
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-header-left">
+                            <div class="accordion-icon-circle">✨</div>
+                            <span class="accordion-label">Recursos Literarios</span>
+                        </div>
+                        <span class="accordion-chevron">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <div class="resource-example">
+                                <div class="resource-label">Prosopopeya (Personificación)</div>
+                                <div class="resource-text">«El incansable, bailó, movió las hojas, sacudió con su risa el polvo» — El aire adquiere cualidades humanas: baila, ríe y escucha.</div>
+                            </div>
+                            <div class="resource-example">
+                                <div class="resource-label">Metáfora</div>
+                                <div class="resource-text">«su capa de rey del cielo» / «su bandera de seda celestial» — El aire es presentado como un monarca noble y libre.</div>
+                            </div>
+                            <div class="resource-example">
+                                <div class="resource-label">Antítesis</div>
+                                <div class="resource-text">«Todo es aurora en los nuevos jardines suspendidos / todo es oscuridad en la terrible sombra del callejón» — Contraste brutal entre ricos y pobres.</div>
+                            </div>
+                            <div class="resource-example">
+                                <div class="resource-label">Enumeración</div>
+                                <div class="resource-text">«pican piedra, clavan tablas, cosen ropa, cortan leña, muelen tierra» — Acumulación que refleja la labor incansable del pueblo trabajador.</div>
+                            </div>
+                            <div class="resource-example">
+                                <div class="resource-label">Apóstrofe</div>
+                                <div class="resource-text">«No, aire, no te vendas» — El poeta se dirige directamente al aire, implorándole como si fuera una persona.</div>
+                            </div>
+                            <div class="resource-example">
+                                <div class="resource-label">Símil implícito</div>
+                                <div class="resource-text">«inmóvil como un mástil» — Comparación directa que le da al aire la solidez y dignidad de un barco.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fragmentos Destacados -->
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-header-left">
+                            <div class="accordion-icon-circle">📜</div>
+                            <span class="accordion-label">Fragmentos Destacados</span>
+                        </div>
+                        <span class="accordion-chevron">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <div class="quote-block">No, aire, no te vendas, / que no te canalicen, / que no te entuben, / que no te encajen / ni te compriman</div>
+                            <p style="margin: 0.8rem 0;">El clímax emocional del poema: una súplica desesperada para que el aire resista la privatización.</p>
+                            
+                            <div class="quote-block">yo soy el poeta hijo / de pobres, padre, tío, / primo, hermano carnal / y concuñado / de los pobres, de todos</div>
+                            <p style="margin: 0.8rem 0;">Neruda se identifica plenamente con el pueblo, declarando su solidaridad como parte de la misma familia.</p>
+
+                            <div class="quote-block">ya vendrá un día / en que libertaremos / la luz y el agua, / la tierra, el hombre, / y todo para todos / será, como tú eres.</div>
+                            <p style="margin: 0.8rem 0;">La promesa esperanzadora del cierre: un futuro donde los recursos serán libres, como el aire.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== POEMA COMPLETO ==================== -->
+    <section class="section section--poema" id="poema">
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-number">04 — Poema Completo</span>
+                <h2 class="section-title" style="color: var(--text-dark);">Oda al Aire</h2>
+                <p class="section-subtitle" style="color: var(--text-light);">Pasa el cursor sobre los versos resaltados para descubrir su significado</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="poem-container fade-in">
+                <div class="poem-text">
+                    <div class="stanza">
+                        Andando en un camino<br>
+                        encontré al aire,<br>
+                        lo saludé y le dije<br>
+                        con respeto:<br>
+                        «Me alegro<br>
+                        de que por una vez<br>
+                        dejes tu transparencia,<br>
+                        así hablaremos».
+                    </div>
+                    <div class="stanza">
+                        El incansable,<br>
+                        bailó, movió las hojas,<br>
+                        sacudió con su risa<br>
+                        el polvo de mis suelas,<br>
+                        y levantando toda<br>
+                        <span class="highlight-verse" data-tooltip="Metáfora: el aire es descrito como si tuviera la estructura majestuosa de un barco con velas azules.">su azul arboladura</span>,<br>
+                        su esqueleto de vidrio,<br>
+                        sus párpados de brisa,<br>
+                        <span class="highlight-verse" data-tooltip="Símil: se compara al aire con un mástil, dándole solidez y nobleza a algo invisible.">inmóvil como un mástil</span><br>
+                        se mantuvo<br>
+                        escuchándome.
+                    </div>
+                    <div class="stanza">
+                        Yo le besé su capa<br>
+                        <span class="highlight-verse" data-tooltip="Metáfora: el aire es un rey celestial, con capa y bandera, representando su nobleza y grandeza.">de rey del cielo</span>,<br>
+                        me envolví en su bandera<br>
+                        de seda celestial<br>
+                        y le dije:<br>
+                        monarca o camarada,<br>
+                        hilo, corola o ave,<br>
+                        no sé quién eres, pero<br>
+                        una cosa te pido,<br>
+                        <span class="highlight-verse" data-tooltip="Apóstrofe y tema central: el poeta le suplica al aire que no se convierta en mercancía.">no te vendas</span>.
+                    </div>
+                    <div class="stanza">
+                        <span class="highlight-verse" data-tooltip="Denuncia directa: el agua ya fue privatizada y el pueblo sufre las consecuencias.">El agua se vendió</span><br>
+                        y de las cañerías<br>
+                        en el desierto<br>
+                        he visto<br>
+                        terminarse las gotas<br>
+                        y el mundo pobre, el pueblo<br>
+                        caminar con su sed<br>
+                        tambaleando en la arena.
+                    </div>
+                    <div class="stanza">
+                        Vi la luz de la noche<br>
+                        racionada,<br>
+                        la gran luz en la casa<br>
+                        de los ricos.<br>
+                        <span class="highlight-verse" data-tooltip="Antítesis poderosa: contraste entre la abundancia de los ricos y la oscuridad de los pobres.">Todo es aurora en los<br>
+                        nuevos jardines suspendidos,<br>
+                        todo es oscuridad<br>
+                        en la terrible sombra<br>
+                        del callejón</span>.
+                    </div>
+                    <div class="stanza">
+                        De allí la noche,<br>
+                        madre madrastra,<br>
+                        sale con un puñal en medio<br>
+                        de sus ojos de búho,<br>
+                        y un grito, un crimen,<br>
+                        se levantan y apagan<br>
+                        tragados por la sombra.
+                    </div>
+                    <div class="stanza">
+                        No, aire,<br>
+                        <span class="highlight-verse" data-tooltip="Clímax del poema: una serie de imperativos desesperados para proteger la libertad del aire.">no te vendas,<br>
+                        que no te canalicen,<br>
+                        que no te entuben,<br>
+                        que no te encajen<br>
+                        ni te compriman</span>,<br>
+                        que no te hagan tabletas,<br>
+                        que no te metan<br>
+                        en una botella,<br>
+                        ¡cuidado!
+                    </div>
+                    <div class="stanza">
+                        Llámame<br>
+                        cuando me necesites,<br>
+                        <span class="highlight-verse" data-tooltip="Neruda se declara parte del pueblo: hijo, padre, tío, primo, hermano de los pobres.">yo soy el poeta hijo<br>
+                        de pobres, padre, tío,<br>
+                        primo, hermano carnal<br>
+                        y concuñado<br>
+                        de los pobres</span>, de todos,<br>
+                        de mi patria y las otras,
+                    </div>
+                    <div class="stanza">
+                        de los pobres que viven junto al río,<br>
+                        y de los que en la altura<br>
+                        de la vertical cordillera<br>
+                        <span class="highlight-verse" data-tooltip="Enumeración: lista de oficios duros que muestran la labor del pueblo trabajador.">pican piedra,<br>
+                        clavan tablas,<br>
+                        cosen ropa,<br>
+                        cortan leña,<br>
+                        muelen tierra</span>,
+                    </div>
+                    <div class="stanza">
+                        y por eso<br>
+                        yo quiero<br>
+                        que respiren,<br>
+                        <span class="highlight-verse" data-tooltip="El aire es lo último que les queda: transparente para que puedan ver un futuro mejor.">tú eres lo único que tienen</span>,<br>
+                        por eso eres<br>
+                        transparente,<br>
+                        para que vean<br>
+                        lo que vendrá mañana,
+                    </div>
+                    <div class="stanza">
+                        por eso existes,<br>
+                        aire,<br>
+                        déjate respirar,<br>
+                        no te encadenes,<br>
+                        no te fíes de nadie<br>
+                        que venga en automóvil<br>
+                        a examinarte,<br>
+                        déjalos,<br>
+                        ríete de ellos,<br>
+                        vuélales el sombrero,<br>
+                        no aceptes<br>
+                        sus proposiciones,
+                    </div>
+                    <div class="stanza">
+                        vamos juntos<br>
+                        bailando por el mundo,<br>
+                        derribando las flores<br>
+                        del manzano,<br>
+                        entrando en las ventanas,<br>
+                        silbando juntos,<br>
+                        silbando<br>
+                        melodías<br>
+                        de ayer y de mañana,
+                    </div>
+                    <div class="stanza">
+                        <span class="highlight-verse" data-tooltip="La promesa utópica final: un día todos los recursos serán libres y compartidos como el aire.">ya vendrá un día<br>
+                        en que libertaremos<br>
+                        la luz y el agua,<br>
+                        la tierra, el hombre,<br>
+                        y todo para todos<br>
+                        será, como tú eres</span>.
+                    </div>
+                    <div class="stanza">
+                        Por eso, ahora,<br>
+                        ¡cuidado!<br>
+                        Y ven conmigo,<br>
+                        nos queda mucho<br>
+                        que bailar y cantar,<br>
+                        vamos<br>
+                        a lo largo del mar,<br>
+                        a lo alto de los montes,<br>
+                        vamos<br>
+                        donde esté floreciendo<br>
+                        la nueva primavera<br>
+                        y en un golpe de viento<br>
+                        y canto<br>
+                        repartamos las flores,<br>
+                        el aroma, los frutos,<br>
+                        el aire<br>
+                        de mañana.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== INTERPRETACIÓN ==================== -->
+    <section class="section section--interpretacion" id="interpretacion">
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-number">05 — Interpretación Personal</span>
+                <h2 class="section-title" style="color: white;">Nuestra Reflexión</h2>
+                <p class="section-subtitle">Opinión crítica, relación con nuestra comunidad e impacto social</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-header-left">
+                            <div class="accordion-icon-circle">💭</div>
+                            <span class="accordion-label">Opinión Crítica del Equipo</span>
+                        </div>
+                        <span class="accordion-chevron">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <p>Consideramos que «Oda al aire» es un poema que, a pesar de haber sido escrito hace más de 70 años, mantiene una vigencia extraordinaria. Neruda logra transformar un tema tan abstracto como el aire en un símbolo poderoso de libertad y justicia social. Lo que más nos impacta es cómo el poeta anticipó una realidad que hoy vivimos con mayor intensidad: la privatización de recursos esenciales y la crisis ambiental global.</p>
+                            <br>
+                            <p>La fuerza del poema radica en que no es solo una denuncia, sino también una invitación a la acción. Neruda no se limita a señalar el problema: se compromete, se solidariza y sueña con un mundo más justo. Esa combinación de indignación y esperanza es lo que hace de esta oda una pieza atemporal.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-header-left">
+                            <div class="accordion-icon-circle">🏘️</div>
+                            <span class="accordion-label">Relación con Nuestra Comunidad</span>
+                        </div>
+                        <span class="accordion-chevron">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <p>En nuestra comunidad, las palabras de Neruda resuenan con fuerza. La realidad que describe — agua escasa, energía costosa, contaminación del aire — no es lejana ni ficticia. En la República Dominicana, muchas comunidades enfrentan cortes de agua constantes, tarifas eléctricas altas y una calidad del aire que se deteriora en las zonas urbanas por el tráfico y la industria.</p>
+                            <br>
+                            <p>Cuando Neruda habla de «los pobres que viven junto al río» y de quienes «pican piedra», no necesitamos ir lejos para encontrar esas realidades. El poema nos recuerda que defender los recursos naturales es defender la dignidad de nuestra propia gente.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="accordion-header-left">
+                            <div class="accordion-icon-circle">🌱</div>
+                            <span class="accordion-label">Reflexión sobre el Impacto Social</span>
+                        </div>
+                        <span class="accordion-chevron">▼</span>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <p>La poesía de Neruda nos demuestra que el arte tiene el poder de abrir los ojos. «Oda al aire» es más que un poema: es un manifiesto ecológico y social que cuestiona las estructuras de poder que deciden quién tiene derecho a los recursos básicos. Su impacto social radica en despertar conciencia — en hacernos preguntar: ¿quién controla el agua que bebemos? ¿Quién decide la calidad del aire que respiramos?</p>
+                            <br>
+                            <p>Como jóvenes estudiantes, creemos que este tipo de literatura nos invita a no quedarnos pasivos. Así como Neruda le pide al aire que «no se venda», nosotros debemos exigir que los bienes esenciales para la vida no sean privilegio de unos pocos, sino derecho de todos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-block dark-quote fade-in" style="max-width: 700px; margin: 3rem auto 0;">
+                «Ya vendrá un día en que libertaremos la luz y el agua, la tierra, el hombre, y todo para todos será, como tú eres.»
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="footer-brand">Oda al Aire — Infografía Interactiva</div>
+        <p>Sebastian S. Frias · Lewin F. Martínez · Joel A. Morales</p>
+        <p style="margin-top: 0.5rem; font-size: 0.78rem;">Español · Análisis Literario y Ecológico · 2025</p>
+    </footer>
+
+    <!-- Scroll to top -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+    <!-- Tooltip element -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // ========== WIND LINES ==========
+        const windContainer = document.getElementById('windLines');
+        for (let i = 0; i < 8; i++) {
+            const line = document.createElement('div');
+            line.className = 'wind-line';
+            line.style.top = (10 + Math.random() * 80) + '%';
+            line.style.width = (150 + Math.random() * 300) + 'px';
+            line.style.animationDuration = (4 + Math.random() * 6) + 's';
+            line.style.animationDelay = (Math.random() * 5) + 's';
+            windContainer.appendChild(line);
+        }
+
+        // ========== PARTICLES ==========
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedX = (Math.random() - 0.3) * 0.8;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.35 + 0.05;
+                this.oscillation = Math.random() * Math.PI * 2;
+                this.oscillationSpeed = Math.random() * 0.02 + 0.005;
+            }
+            update() {
+                this.oscillation += this.oscillationSpeed;
+                this.x += this.speedX + Math.sin(this.oscillation) * 0.3;
+                this.y += this.speedY + Math.cos(this.oscillation) * 0.15;
+                if (this.x > canvas.width + 10) this.x = -10;
+                if (this.x < -10) this.x = canvas.width + 10;
+                if (this.y > canvas.height + 10 || this.y < -10) this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 230, 245, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ========== SCROLL ANIMATIONS ==========
+        const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in, .info-card, .accordion-item, .timeline-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ========== NAV SCROLL ==========
+        const nav = document.getElementById('navBar');
+        const sections = document.querySelectorAll('.hero, .section');
+        const navBtns = document.querySelectorAll('.nav-btn');
+
+        window.addEventListener('scroll', () => {
+            // Nav background
+            nav.classList.toggle('scrolled', window.scrollY > 80);
+
+            // Active nav button
+            let current = '';
+            sections.forEach(sec => {
+                if (window.scrollY >= sec.offsetTop - 200) {
+                    current = sec.id;
+                }
+            });
+            navBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(current)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Progress bar
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = (window.scrollY / totalHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Scroll to top button
+            document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 600);
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ========== ACCORDION ==========
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const wasOpen = item.classList.contains('open');
+            // Close siblings within same accordion
+            item.parentElement.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+            if (!wasOpen) item.classList.add('open');
+        }
+
+        // ========== IMPACT COUNTER ANIMATION ==========
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.impact-number');
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.dataset.target);
+                        const duration = 2000;
+                        const step = target / (duration / 16);
+                        let current = 0;
+                        const animate = () => {
+                            current += step;
+                            if (current < target) {
+                                counter.textContent = Math.floor(current).toLocaleString();
+                                requestAnimationFrame(animate);
+                            } else {
+                                counter.textContent = target.toLocaleString();
+                            }
+                        };
+                        animate();
+                    });
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.impact-strip').forEach(strip => counterObserver.observe(strip));
+
+        // ========== TOOLTIP ==========
+        const tooltip = document.getElementById('tooltip');
+        document.querySelectorAll('.highlight-verse').forEach(el => {
+            el.addEventListener('mouseenter', (e) => {
+                tooltip.textContent = el.dataset.tooltip;
+                tooltip.classList.add('show');
+            });
+            el.addEventListener('mousemove', (e) => {
+                let x = e.clientX + 15;
+                let y = e.clientY - 10;
+                if (x + 290 > window.innerWidth) x = e.clientX - 295;
+                if (y + 100 > window.innerHeight) y = e.clientY - 80;
+                tooltip.style.left = x + 'px';
+                tooltip.style.top = y + 'px';
+            });
+            el.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+        });
+    </script>
+</body>
+</html>
